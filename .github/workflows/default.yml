@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
-      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
       - run: docker build -t larsvandersangen/react-test -f ./client/Dockerfile.dev ./client
       - run: docker run -e CI=true larsvandersangen/react-test npm test -- --coverage
@@ -20,6 +18,12 @@ jobs:
       - run: docker build -t larsvandersangen/multi-nginx ./nginx
       - run: docker build -t larsvandersangen/multi-server ./server
       - run: docker build -t larsvandersangen/multi-worker ./worker
+
+      - run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+      - run: docker push larsvandersangen/multi-client
+      - run: docker push larsvandersangen/multi-nginx
+      - run: docker push larsvandersangen/multi-server
+      - run: docker push larsvandersangen/multi-worker
 
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
