@@ -30,7 +30,7 @@ services:
 
   nginx:
     image: "larsvandersangen/multi-nginx"
-    memory: 128m
+    mem_limit: 128m
     hostname: nginx
     ports:
       - "80:80"
